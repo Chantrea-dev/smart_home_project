@@ -13,6 +13,9 @@ import DryCleaningIcon from "@mui/icons-material/DryCleaning";
 import VerticalShadesIcon from "@mui/icons-material/VerticalShades";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import LogoutIcon from "@mui/icons-material/Logout";
+import PhoneIcon from "@mui/icons-material/Phone";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import PersonPinIcon from "@mui/icons-material/PersonPin";
 import Image from "next/image";
 import "./style.css";
 function TabPanel(props) {
@@ -47,12 +50,24 @@ export default function VerticalTabs() {
             sx={{
                 // flexGrow: 1,
                 bgcolor: "background.paper",
-                display: "flex",
                 height: "50vh",
+                // display: "flex",
                 width: "100%",
+                display: {
+                    sm: "flex",
+                },
             }}
         >
-            <Box sx={{ boxShadow: 2, borderRadius: "5px" }}>
+            <Box
+                sx={{
+                    boxShadow: 2,
+                    borderRadius: "5px",
+                    display: {
+                        xs: "none",
+                        sm: "block",
+                    },
+                }}
+            >
                 <Box
                     sx={{
                         display: "flex",
@@ -198,6 +213,31 @@ export default function VerticalTabs() {
                 <TabPanel value={value} index={3}>
                     <Door />
                 </TabPanel>
+            </Box>
+            <Box
+                sx={{
+                    display: {
+                        xs: "block",
+                        sm: "none",
+                        xs: "flex",
+                    },
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "10rem",
+                    width: "100%",
+                    overflow: "auto",
+                }}
+            >
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="icon label tabs example"
+                >
+                    <Tab icon={<WbTwilightIcon />} label="Light" />
+                    <Tab icon={<DryCleaningIcon />} label=" Close hanger" />
+                    <Tab icon={<VerticalShadesIcon />} label="Curtains" />
+                    <Tab icon={<MeetingRoomIcon />} label="Door" />
+                </Tabs>
             </Box>
         </Box>
     );
