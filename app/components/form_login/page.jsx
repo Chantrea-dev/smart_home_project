@@ -13,9 +13,6 @@ import DryCleaningIcon from "@mui/icons-material/DryCleaning";
 import VerticalShadesIcon from "@mui/icons-material/VerticalShades";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import LogoutIcon from "@mui/icons-material/Logout";
-import PhoneIcon from "@mui/icons-material/Phone";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import PersonPinIcon from "@mui/icons-material/PersonPin";
 import Image from "next/image";
 import "./style.css";
 function TabPanel(props) {
@@ -224,14 +221,14 @@ export default function VerticalTabs() {
                     justifyContent: "center",
                     alignItems: "center",
                     marginTop: "10rem",
-                    width: "100%",
-                    overflow: "auto",
                 }}
+                className="tab-bar"
             >
                 <Tabs
                     value={value}
                     onChange={handleChange}
                     aria-label="icon label tabs example"
+                    sx={{ width: "100%", overflow: "auto" }}
                 >
                     <Tab icon={<WbTwilightIcon />} label="Light" />
                     <Tab icon={<DryCleaningIcon />} label=" Close hanger" />

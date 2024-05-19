@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Box, colors } from "@mui/material";
+import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import LightIcon from "@mui/icons-material/Light";
@@ -10,12 +10,8 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import SingleBedIcon from "@mui/icons-material/SingleBed";
 import Stack from "@mui/material/Stack";
 import Slider from "@mui/material/Slider";
-import VolumeDown from "@mui/icons-material/VolumeDown";
-import VolumeUp from "@mui/icons-material/VolumeUp";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import "./style.css";
-import { Tune } from "@mui/icons-material";
-import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";
 export default function Home() {
     const [value, setValue] = useState();
 
