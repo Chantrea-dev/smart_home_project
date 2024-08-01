@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -12,15 +12,95 @@ import Stack from "@mui/material/Stack";
 import Slider from "@mui/material/Slider";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import "./style.css";
+import app from "@/app/firebaseConfig";
+import { getDatabase, ref, set, push, get, update } from "firebase/database";
 export default function Home() {
-    const [value, setValue] = useState();
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const [lamp, setLamp] = useState(undefined);
+    const [kitchen, setKitchen] = useState(undefined);
+    const [bedroom, setBedroom] = useState(undefined);
+    const saveLamp = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "smart/home");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            await update(dbRef, {
+                lamp: !Object.values(snapshort.val())[0],
+            });
+            fetchLamp();
+        } else {
+            await set(dbRef, {
+                lamp: true,
+            });
+            fetchLamp();
+        }
     };
+    const fetchLamp = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "smart/home");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            setLamp(Object.values(snapshort.val())[0]);
+        }
+    };
+    const Kitchen = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "Kitchen/Kitchen");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            await update(dbRef, {
+                kitchen: !Object.values(snapshort.val())[0],
+            });
+            fetchKitchen();
+        } else {
+            await set(dbRef, {
+                kitchen: true,
+            });
+            fetchKitchen();
+        }
+    };
+
+    const fetchKitchen = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "Kitchen/Kitchen");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            setKitchen(Object.values(snapshort.val())[0]);
+        }
+    };
+
+    const bedRoom = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "bedroom/bedroom");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            await update(dbRef, {
+                bedroom: !Object.values(snapshort.val())[0],
+            });
+            fetchBedroom();
+        } else {
+            await set(dbRef, {
+                bedroom: true,
+            });
+            fetchBedroom();
+        }
+    };
+
+    const fetchBedroom = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "bedroom/bedroom");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            setBedroom(Object.values(snapshort.val())[0]);
+        }
+    };
+    useEffect(() => {
+        fetchLamp();
+        fetchKitchen();
+        fetchBedroom();
+    }, []);
     return (
         <>
-            <Box sx={{ display: "grid", gap: "20px" }}>
+            <Box sx={{ display: "grid", gap: "20px", width: "370px" }}>
                 <Box
                     sx={{
                         display: "flex",
@@ -55,7 +135,7 @@ export default function Home() {
                                 fontFamily: "initial",
                             }}
                         >
-                            Led temporary
+                            Lamp
                         </Box>
                         <LightIcon />
                     </Box>
@@ -68,32 +148,9 @@ export default function Home() {
                         }}
                     >
                         <Button
+                            onClick={saveLamp}
                             variant="contained"
-                            disabled
-                            sx={{
-                                display: "grid",
-                                fontSize: "8px",
-                                textAlign: "center",
-                                width: "67px",
-                                textTransform: "capitalize",
-                            }}
-                        >
-                            <MeetingRoomIcon
-                                sx={{
-                                    width: "35px",
-                                    height: "35px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            />
-                            <Box sx={{ fontSize: "6px", whiteSpace: "nowrap" }}>
-                                Outdoor Areas
-                            </Box>
-                        </Button>
-                        <Button
-                            variant="contained"
-                            disabled
+                            color={lamp ? "error" : "success"}
                             sx={{
                                 display: "grid",
                                 fontSize: "8px",
@@ -111,13 +168,20 @@ export default function Home() {
                                     alignItems: "center",
                                 }}
                             />
-                            <Box sx={{ fontSize: "6px", whiteSpace: "nowrap" }}>
+                            <Box
+                                sx={{
+                                    fontSize: "6px",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
                                 Living Room
                             </Box>
                         </Button>
+
                         <Button
+                            onClick={Kitchen}
                             variant="contained"
-                            disabled
+                            color={kitchen ? "error" : "success"}
                             sx={{
                                 display: "grid",
                                 fontSize: "8px",
@@ -139,7 +203,8 @@ export default function Home() {
                         </Button>
                         <Button
                             variant="contained"
-                            disabled
+                            onClick={bedRoom}
+                            color={bedroom ? "error" : "success"}
                             sx={{
                                 display: "grid",
                                 fontSize: "8px",
@@ -159,82 +224,6 @@ export default function Home() {
                             />
                             <Box sx={{ fontSize: "6px" }}>Bedroom</Box>
                         </Button>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            textTransform: "capitalize",
-                            fontSize: "10px",
-                            paddingTop: "20px",
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                color: "gray",
-                                fontFamily: "initial",
-                                fontSize: "12px",
-                            }}
-                        >
-                            Lamp Control
-                        </Box>
-                        <LightIcon />
-                    </Box>
-                    <Box sx={{ display: "grid", gap: "7px" }}>
-                        <Box sx={{ color: "gray", fontFamily: "initial" }}>
-                            Bedroom
-                        </Box>
-                        <Stack
-                            spacing={2}
-                            direction="row"
-                            sx={{
-                                mb: 1,
-                                border: "1px solid #1976d2",
-                                borderRadius: "10px",
-                                padding: "5px",
-                            }}
-                            alignItems="center"
-                        >
-                            <LightModeIcon
-                                sx={{ color: "gray", width: "20px" }}
-                            />
-                            <Slider
-                                aria-label="Volume"
-                                value={value}
-                                onChange={handleChange}
-                            />
-                            <LightModeIcon
-                                sx={{ color: "gray", width: "20px" }}
-                            />
-                        </Stack>
-                    </Box>
-                    <Box sx={{ display: "grid", gap: "7px" }}>
-                        <Box sx={{ color: "gray", fontFamily: "initial" }}>
-                            Living Room
-                        </Box>
-                        <Stack
-                            spacing={2}
-                            direction="row"
-                            sx={{
-                                mb: 1,
-                                border: "1px solid #1976d2",
-                                borderRadius: "10px",
-                                padding: "5px",
-                            }}
-                            alignItems="center"
-                        >
-                            <LightModeIcon
-                                sx={{ color: "gray", width: "20px" }}
-                            />
-                            <Slider
-                                aria-label="Volume"
-                                value={value}
-                                onChange={handleChange}
-                            />
-                            <LightModeIcon
-                                sx={{ color: "gray", width: "20px" }}
-                            />
-                        </Stack>
                     </Box>
                 </Box>
             </Box>

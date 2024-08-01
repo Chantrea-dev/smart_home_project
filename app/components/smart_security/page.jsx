@@ -1,27 +1,46 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import Button from "@mui/material/Button";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import { Typography } from "@mui/material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import Switch from "@mui/material/Switch";
+import Button from "@mui/material/Button";
+import LightIcon from "@mui/icons-material/Light";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 
 import "./style.css";
-
+import app from "@/app/firebaseConfig";
+import { getDatabase, ref, set, push, get, update } from "firebase/database";
 export default function DigitalClockViews() {
-    const label = { inputProps: { "aria-label": "Switch demo" } };
-
+    const [door, setDoor] = useState(undefined);
+    const saveDoor = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "door/door");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            await update(dbRef, {
+                door: !Object.values(snapshort.val())[0],
+            });
+            fetchDoor();
+        } else {
+            await set(dbRef, {
+                door: true,
+            });
+            fetchDoor();
+        }
+    };
+    const fetchDoor = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "door/door");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            setDoor(Object.values(snapshort.val())[0]);
+        }
+    };
+    useEffect(() => {
+        fetchDoor();
+    }, []);
     return (
         <>
-            <Box sx={{ display: "grid", gap: "20px" }}>
+            <Box sx={{ display: "grid", gap: "20px", width: "370px" }}>
                 <Box
                     sx={{
                         display: "flex",
@@ -32,7 +51,7 @@ export default function DigitalClockViews() {
                         borderRadius: "5px",
                     }}
                 >
-                    <Box>Curtain</Box>
+                    <Box>Smart Door</Box>
                     <Button
                         variant="outlined"
                         href="#outlined-buttons"
@@ -41,16 +60,59 @@ export default function DigitalClockViews() {
                         <NotificationsNoneIcon />
                     </Button>
                 </Box>
-                <Box
-                    sx={{
-                        boxShadow: 2,
-                        padding: 1.5,
-                        borderRadius: "5px",
-                        display: "grid",
-                        gap: "10px",
-                    }}
-                >
-                    <Typography>Smart security</Typography>
+                <Box sx={{ boxShadow: 2, padding: 1.5, borderRadius: "5px" }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            textTransform: "capitalize",
+                            fontSize: "13px",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                color: "gray",
+                                fontFamily: "initial",
+                            }}
+                        >
+                            Led temporary
+                        </Box>
+                        <LightIcon />
+                    </Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: "10px",
+                            alignItems: "center",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            onClick={saveDoor}
+                            color={door ? "error" : "success"}
+                            sx={{
+                                display: "grid",
+                                fontSize: "8px",
+                                textAlign: "center",
+                                width: "67px",
+                                textTransform: "capitalize",
+                            }}
+                        >
+                            <MeetingRoomIcon
+                                sx={{
+                                    width: "35px",
+                                    height: "35px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            />
+                            <Box sx={{ fontSize: "6px", whiteSpace: "nowrap" }}>
+                                Outdoor Areas
+                            </Box>
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
         </>

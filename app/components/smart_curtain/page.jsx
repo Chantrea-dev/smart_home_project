@@ -1,27 +1,66 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import { Typography } from "@mui/material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import Switch from "@mui/material/Switch";
-
+import LightIcon from "@mui/icons-material/Light";
+import SingleBedIcon from "@mui/icons-material/SingleBed";
+import CurtainsIcon from "@mui/icons-material/Curtains";
+import CloudIcon from "@mui/icons-material/Cloud";
 import "./style.css";
+import app from "@/app/firebaseConfig";
+import { getDatabase, ref, set, push, get, update } from "firebase/database";
+export default function Curtain() {
+    const [weather, setWeather] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [curtain, setCurtain] = useState(undefined);
+    const saveCurtain = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "curtain/curtain");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            await update(dbRef, {
+                curtain: !Object.values(snapshort.val())[0],
+            });
+            fetchCutain();
+        } else {
+            await set(dbRef, {
+                curtain: true,
+            });
+            fetchCutain();
+        }
+    };
+    const fetchCutain = async () => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "curtain/curtain");
+        const snapshort = await get(dbRef);
+        if (snapshort.exists()) {
+            setCurtain(Object.values(snapshort.val())[0]);
+        }
+    };
+    useEffect(() => {
+        fetchCutain();
+    }, []);
+    useEffect(() => {
+        const fetchWeather = async () => {
+            try {
+                const response = await axios.get(
+                    `https://api.openweathermap.org/data/2.5/weather?q=Cambodia&units=metric&appid=ff311eb0b0ba3853e2235527b49a2ea6`
+                );
+                setWeather(response.data);
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+            }
+        };
 
-export default function DigitalClockViews() {
-    const label = { inputProps: { "aria-label": "Switch demo" } };
+        fetchWeather();
+    }, []);
 
     return (
         <>
-            <Box sx={{ display: "grid", gap: "20px" }}>
+            <Box sx={{ display: "grid", gap: "20px", width: "370px" }}>
                 <Box
                     sx={{
                         display: "flex",
@@ -46,77 +85,100 @@ export default function DigitalClockViews() {
                         boxShadow: 2,
                         padding: 1.5,
                         borderRadius: "5px",
-                        display: "grid",
+                        display: "flex",
+                        flexDirection: "column",
                         gap: "10px",
                     }}
                 >
-                    <Typography>My Curtain</Typography>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer
-                            components={[
-                                "MobileDateTimePicker",
-                                "MobileDateTimePicker",
-                            ]}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            textTransform: "capitalize",
+                            fontSize: "13px",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                color: "gray",
+                                fontFamily: "initial",
+                            }}
                         >
-                            <DateTimePicker
-                                label={'"Date"'}
-                                openTo="year"
-                                sx={{
-                                    display: {
-                                        xs: "none",
-                                        md: "flex",
-                                    },
-                                }}
-                            />
-
-                            <MobileTimePicker
-                                label={'"hours"'}
-                                openTo="hours"
-                                sx={{
-                                    display: {
-                                        xs: "flex",
-                                        md: "none",
-                                    },
-                                }}
-                            />
-                        </DemoContainer>
-                    </LocalizationProvider>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            paddingTop: "10px",
-                            color: "gray",
-                        }}
-                    >
-                        <Box>Every day</Box>
-
-                        <DateRangeIcon sx={{ color: "gray" }} />
+                            Curtain
+                        </Box>
+                        <LightIcon />
                     </Box>
-                    <Stack
-                        direction="row"
-                        spacing={2}
-                        sx={{ width: "100%", overflow: "auto" }}
-                    >
-                        <Avatar sx={{ bgcolor: "#fff243" }}>M</Avatar>
-                        <Avatar sx={{ bgcolor: "#d6569b" }}>T</Avatar>
-                        <Avatar sx={{ bgcolor: "#52ab62" }}>W</Avatar>
-                        <Avatar sx={{ bgcolor: "#e08b44" }}>T</Avatar>
-                        <Avatar sx={{ bgcolor: "#3c84fa" }}>F</Avatar>
-                        <Avatar sx={{ bgcolor: "#d14a43" }}>S</Avatar>
-                        <Avatar sx={{ bgcolor: "#80589e" }}>S</Avatar>
-                    </Stack>
                     <Box
                         sx={{
                             display: "flex",
-                            justifyContent: "space-between",
+                            gap: "10px",
                             alignItems: "center",
-                            borderBottom: "1px solid #c4c4c4",
+                            cursor: "pointer",
                         }}
                     >
-                        <Typography>All day</Typography>
-                        <Switch {...label} defaultChecked />
+                        <Button
+                            variant="contained"
+                            onClick={saveCurtain}
+                            color={curtain ? "error" : "success"}
+                            sx={{
+                                display: "grid",
+                                fontSize: "8px",
+                                textAlign: "center",
+                                width: "67px",
+                                textTransform: "capitalize",
+                            }}
+                        >
+                            <CurtainsIcon
+                                sx={{
+                                    width: "35px",
+                                    height: "35px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            />
+                            <Box sx={{ fontSize: "6px" }}>Bedroom</Box>
+                        </Button>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            fontSize: "20px",
+                            textAlign: "center",
+                            background: "rgb(2,0,36)",
+                            background:
+                                "linear-gradient(90deg, rgba(2,0,36,1) 1%, rgba(11,90,153,1) 32%, rgba(17,144,232,0.3786764705882353) 100%, rgba(0,212,255,1) 100%)",
+                            height: "57px",
+                            borderRadius: "9px",
+                            padding: "10px",
+                            color: "white",
+                            display: "flex",
+                            gap: "10px",
+                        }}
+                    >
+                        <CloudIcon
+                            sx={{
+                                width: "40px",
+                                height: "40px",
+                            }}
+                        />
+                        {loading ? (
+                            <Box>Loading...</Box>
+                        ) : weather ? (
+                            <>
+                                <Box>{weather.main.temp}°C</Box>
+                                <Box
+                                    sx={{
+                                        paddingTop: "15px",
+                                        whiteSpace: "nowrap",
+                                    }}
+                                >
+                                    {weather.name}
+                                </Box>
+                            </>
+                        ) : (
+                            <Box>Error fetching weather</Box>
+                        )}
                     </Box>
                 </Box>
             </Box>
