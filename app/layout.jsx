@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Home from "./components/smart_larmp/page";
+import Home from "./components/smart_lamp/page";
 
 const inter = Inter({ subsets: ["latin"] });
 

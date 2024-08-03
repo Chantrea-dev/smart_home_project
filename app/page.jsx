@@ -95,7 +95,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Curtains from "@/app/components/smart_curtain/page";
 import Door from "@/app/components/smart_security/page";
-import Light from "@/app/components/smart_larmp/page";
+import Light from "@/app/components/smart_lamp/page";
 import WbTwilightIcon from "@mui/icons-material/WbTwilight";
 import DryCleaningIcon from "@mui/icons-material/DryCleaning";
 import VerticalShadesIcon from "@mui/icons-material/VerticalShades";
