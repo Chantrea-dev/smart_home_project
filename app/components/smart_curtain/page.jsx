@@ -31,16 +31,17 @@ export default function Curtain() {
             setCurtain(true);
         }
     };
-    const fetchCutain = async () => {
+    const fetchCurtain = async () => {
         const db = getDatabase(app);
         const dbRef = ref(db, "curtain/state");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            setCurtain(Object.values(snapshort.val())[0]);
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            console.log("🚀 ~ fetchCurtain ~ snapshot.val():", snapshot.val());
+            setCurtain(snapshot.val());
         }
     };
     useEffect(() => {
-        fetchCutain();
+        fetchCurtain();
     }, []);
     useEffect(() => {
         const fetchWeather = async () => {

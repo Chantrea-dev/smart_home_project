@@ -33,10 +33,10 @@ export default function Home() {
     };
     const fetchLamp = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "smart/home");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            setLamp(Object.values(snapshort.val())[0]);
+        const dbRef = ref(db, "livingroom/state");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            setLamp(snapshot.val());
         }
     };
     const Kitchen = async () => {
@@ -55,10 +55,10 @@ export default function Home() {
 
     const fetchKitchen = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "Kitchen/Kitchen");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            setKitchen(Object.values(snapshort.val())[0]);
+        const dbRef = ref(db, "kitchen/state");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            setKitchen(snapshot.val());
         }
     };
 
@@ -79,9 +79,9 @@ export default function Home() {
     const fetchBedroom = async () => {
         const db = getDatabase(app);
         const dbRef = ref(db, "bedroom/state");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            setBedroom(Object.values(snapshort.val())[0]);
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            setBedroom(snapshot.val());
         }
     };
     useEffect(() => {
