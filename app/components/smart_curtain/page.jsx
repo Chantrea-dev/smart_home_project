@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Box } from "@mui/material";
-import { Gauge } from '@mui/x-charts/Gauge';
-import Stack from '@mui/material/Stack';
+import { Gauge } from "@mui/x-charts/Gauge";
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import LightIcon from "@mui/icons-material/Light";
@@ -17,26 +17,23 @@ export default function Curtain() {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(true);
     const [curtain, setCurtain] = useState(undefined);
-    
+
     const saveCurtain = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "curtain/curtain");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            await update(dbRef, {
-                curtain: !Object.values(snapshort.val())[0],
-            });
-            fetchCutain();
+        const dbRef = ref(db, "curtain/state");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const currentState = snapshot.val();
+            await set(dbRef, !currentState);
+            setCurtain(!currentState);
         } else {
-            await set(dbRef, {
-                curtain: true,
-            });
-            fetchCutain();
+            await set(dbRef, true);
+            setCurtain(true);
         }
     };
     const fetchCutain = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "curtain/curtain");
+        const dbRef = ref(db, "curtain/state");
         const snapshort = await get(dbRef);
         if (snapshort.exists()) {
             setCurtain(Object.values(snapshort.val())[0]);
@@ -72,7 +69,6 @@ export default function Curtain() {
                         boxShadow: 2,
                         padding: 1.5,
                         borderRadius: "5px",
-                        
                     }}
                 >
                     <Box>Curtain</Box>
@@ -104,7 +100,7 @@ export default function Curtain() {
                     >
                         <Box
                             sx={{
-                                color: "gray",
+                                color: "#403e3e",
                                 fontFamily: "initial",
                             }}
                         >
@@ -118,13 +114,12 @@ export default function Curtain() {
                             gap: "10px",
                             alignItems: "center",
                             cursor: "pointer",
-                            justifyContent: 'center'
                         }}
                     >
                         <Button
                             variant="contained"
                             onClick={saveCurtain}
-                            color={curtain ? "error" : "success"}
+                            color={curtain ? "success" : "error"}
                             sx={{
                                 display: "grid",
                                 fontSize: "10px",
@@ -147,22 +142,21 @@ export default function Curtain() {
                     </Box>
 
                     <Box
-                        // sx={{
-                        //     fontSize: "20px",
-                        //     textAlign: "center",
-                        //     background: "rgb(2,0,36)",
-                        //     background:
-                        //         "linear-gradient(90deg, rgba(2,0,36,1) 1%, rgba(11,90,153,1) 32%, rgba(17,144,232,0.3786764705882353) 100%, rgba(0,212,255,1) 100%)",
-                        //     height: "57px",
-                        //     borderRadius: "9px",
-                        //     padding: "10px",
-                        //     color: "white",
-                        //     display: "flex",
-                        //     gap: "10px",
-                        // }}
-                        
+                        sx={{
+                            fontSize: "20px",
+                            textAlign: "center",
+                            background: "rgb(2,0,36)",
+                            background:
+                                "linear-gradient(90deg, rgba(2,0,36,1) 1%, rgba(11,90,153,1) 32%, rgba(17,144,232,0.3786764705882353) 100%, rgba(0,212,255,1) 100%)",
+                            height: "57px",
+                            borderRadius: "9px",
+                            padding: "10px",
+                            color: "white",
+                            display: "flex",
+                            gap: "10px",
+                        }}
                     >
-                        {/* <CloudIcon
+                        <CloudIcon
                             sx={{
                                 width: "40px",
                                 height: "40px",
@@ -184,19 +178,7 @@ export default function Curtain() {
                             </>
                         ) : (
                             <Box>Error fetching weather</Box>
-                        )} */}
-                    </Box>
-                     {/* Gauge Component */}
-                     <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Stack direction0={{ xs: 'column', md: 'row' }} spacing={{ xs: 1, md: 3 }}>
-                            <Gauge width={250} height={250} value={10} startAngle={-90} endAngle={90} />
-                        </Stack>
+                        )}
                     </Box>
                 </Box>
             </Box>

@@ -20,18 +20,15 @@ export default function Home() {
     const [bedroom, setBedroom] = useState(undefined);
     const saveLamp = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "smart/home");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            await update(dbRef, {
-                lamp: !Object.values(snapshort.val())[0],
-            });
-            fetchLamp();
+        const dbRef = ref(db, "livingroom/state");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const currentState = snapshot.val();
+            await set(dbRef, !currentState);
+            setLamp(!currentState);
         } else {
-            await set(dbRef, {
-                lamp: true,
-            });
-            fetchLamp();
+            await set(dbRef, true);
+            setLamp(true);
         }
     };
     const fetchLamp = async () => {
@@ -44,18 +41,15 @@ export default function Home() {
     };
     const Kitchen = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "Kitchen/Kitchen");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            await update(dbRef, {
-                kitchen: !Object.values(snapshort.val())[0],
-            });
-            fetchKitchen();
+        const dbRef = ref(db, "kitchen/state");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const currentState = snapshot.val();
+            await set(dbRef, !currentState);
+            setKitchen(!currentState);
         } else {
-            await set(dbRef, {
-                kitchen: true,
-            });
-            fetchKitchen();
+            await set(dbRef, true);
+            setKitchen(true);
         }
     };
 
@@ -70,24 +64,21 @@ export default function Home() {
 
     const bedRoom = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "bedroom/bedroom");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            await update(dbRef, {
-                bedroom: !Object.values(snapshort.val())[0],
-            });
-            fetchBedroom();
+        const dbRef = ref(db, "bedroom/state");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const currentState = snapshot.val();
+            await set(dbRef, !currentState);
+            setBedroom(!currentState);
         } else {
-            await set(dbRef, {
-                bedroom: true,
-            });
-            fetchBedroom();
+            await set(dbRef, true);
+            setBedroom(true);
         }
     };
 
     const fetchBedroom = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "bedroom/bedroom");
+        const dbRef = ref(db, "bedroom/state");
         const snapshort = await get(dbRef);
         if (snapshort.exists()) {
             setBedroom(Object.values(snapshort.val())[0]);
@@ -131,7 +122,7 @@ export default function Home() {
                     >
                         <Box
                             sx={{
-                                color: "gray",
+                                color: "#403e3e",
                                 fontFamily: "initial",
                             }}
                         >
@@ -145,20 +136,18 @@ export default function Home() {
                             gap: "10px",
                             alignItems: "center",
                             cursor: "pointer",
-                            justifyContent: 'center'
                         }}
                     >
                         <Button
                             onClick={saveLamp}
                             variant="contained"
-                            color={lamp ? "error" : "success"}
+                            color={lamp ? "success" : "error"}
                             sx={{
                                 display: "grid",
                                 fontSize: "10px",
                                 textAlign: "center",
                                 width: "67px",
                                 textTransform: "capitalize",
-                                
                             }}
                         >
                             <WeekendIcon
@@ -168,14 +157,12 @@ export default function Home() {
                                     display: "flex",
                                     justifyContent: "center",
                                     alignItems: "center",
-                                    
                                 }}
                             />
                             <Box
                                 sx={{
                                     fontSize: "10px",
                                     whiteSpace: "nowrap",
-                                    
                                 }}
                             >
                                 Living Room
@@ -185,7 +172,7 @@ export default function Home() {
                         <Button
                             onClick={Kitchen}
                             variant="contained"
-                            color={kitchen ? "error" : "success"}
+                            color={kitchen ? "success" : "error"}
                             sx={{
                                 display: "grid",
                                 fontSize: "8px",
@@ -208,7 +195,7 @@ export default function Home() {
                         <Button
                             variant="contained"
                             onClick={bedRoom}
-                            color={bedroom ? "error" : "success"}
+                            color={bedroom ? "success" : "error"}
                             sx={{
                                 display: "grid",
                                 fontSize: "8px",

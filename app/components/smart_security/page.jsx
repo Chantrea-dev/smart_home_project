@@ -13,23 +13,20 @@ export default function DigitalClockViews() {
     const [door, setDoor] = useState(undefined);
     const saveDoor = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "door/door");
-        const snapshort = await get(dbRef);
-        if (snapshort.exists()) {
-            await update(dbRef, {
-                door: !Object.values(snapshort.val())[0],
-            });
-            fetchDoor();
+        const dbRef = ref(db, "door/state");
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const currentState = snapshot.val();
+            await set(dbRef, !currentState);
+            setDoor(!currentState);
         } else {
-            await set(dbRef, {
-                door: true,
-            });
-            fetchDoor();
+            await set(dbRef, true);
+            setDoor(true);
         }
     };
     const fetchDoor = async () => {
         const db = getDatabase(app);
-        const dbRef = ref(db, "door/door");
+        const dbRef = ref(db, "door/state");
         const snapshort = await get(dbRef);
         if (snapshort.exists()) {
             setDoor(Object.values(snapshort.val())[0]);
@@ -71,11 +68,11 @@ export default function DigitalClockViews() {
                     >
                         <Box
                             sx={{
-                                color: "gray",
+                                color: "#403e3e",
                                 fontFamily: "initial",
                             }}
                         >
-                            Led temporary
+                            Door
                         </Box>
                         <LightIcon />
                     </Box>
@@ -85,13 +82,12 @@ export default function DigitalClockViews() {
                             gap: "10px",
                             alignItems: "center",
                             cursor: "pointer",
-                            justifyContent: 'center'
                         }}
                     >
                         <Button
                             variant="contained"
                             onClick={saveDoor}
-                            color={door ? "error" : "success"}
+                            color={door ? "success" : "error"}
                             sx={{
                                 display: "grid",
                                 fontSize: "8px",
