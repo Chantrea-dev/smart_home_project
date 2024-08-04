@@ -85,6 +85,7 @@ export default function DigitalClockViews() {
                             gap: "10px",
                             alignItems: "center",
                             cursor: "pointer",
+                            justifyContent: 'center'
                         }}
                     >
                         <Button
@@ -101,14 +102,14 @@ export default function DigitalClockViews() {
                         >
                             <MeetingRoomIcon
                                 sx={{
-                                    width: "35px",
+                                    width: "60px",
                                     height: "35px",
                                     display: "flex",
                                     justifyContent: "center",
                                     alignItems: "center",
                                 }}
                             />
-                            <Box sx={{ fontSize: "6px", whiteSpace: "nowrap" }}>
+                            <Box sx={{ fontSize: "9px", whiteSpace: "nowrap" }}>
                                 Outdoor Areas
                             </Box>
                         </Button>

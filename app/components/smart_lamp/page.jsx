@@ -145,6 +145,7 @@ export default function Home() {
                             gap: "10px",
                             alignItems: "center",
                             cursor: "pointer",
+                            justifyContent: 'center'
                         }}
                     >
                         <Button
@@ -153,25 +154,28 @@ export default function Home() {
                             color={lamp ? "error" : "success"}
                             sx={{
                                 display: "grid",
-                                fontSize: "8px",
+                                fontSize: "10px",
                                 textAlign: "center",
                                 width: "67px",
                                 textTransform: "capitalize",
+                                
                             }}
                         >
                             <WeekendIcon
                                 sx={{
-                                    width: "35px",
+                                    width: "60px",
                                     height: "35px",
                                     display: "flex",
                                     justifyContent: "center",
                                     alignItems: "center",
+                                    
                                 }}
                             />
                             <Box
                                 sx={{
-                                    fontSize: "6px",
+                                    fontSize: "10px",
                                     whiteSpace: "nowrap",
+                                    
                                 }}
                             >
                                 Living Room
@@ -199,7 +203,7 @@ export default function Home() {
                                     alignItems: "center",
                                 }}
                             />
-                            <Box sx={{ fontSize: "6px" }}>Kitchen</Box>
+                            <Box sx={{ fontSize: "10px" }}>Kitchen</Box>
                         </Button>
                         <Button
                             variant="contained"
@@ -215,14 +219,14 @@ export default function Home() {
                         >
                             <SingleBedIcon
                                 sx={{
-                                    width: "35px",
+                                    width: "65px",
                                     height: "35px",
                                     display: "flex",
                                     justifyContent: "center",
                                     alignItems: "center",
                                 }}
                             />
-                            <Box sx={{ fontSize: "6px" }}>Bedroom</Box>
+                            <Box sx={{ fontSize: "10px" }}>Bedroom</Box>
                         </Button>
                     </Box>
                 </Box>
