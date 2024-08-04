@@ -142,7 +142,7 @@ export default function VerticalTabs() {
                     display: "flex",
                     justifyContent: "space-between",
                     flexDirection: "column",
-                    height: "100vh",
+                    height: "100dvh",
                     alignItems: "center",
                 }}
             >
